@@ -8,14 +8,57 @@
             this._context = _context;
         }
 
-        public async Task<Battle> GetBattle(int id)
+        public async Task<IEnumerable<Battle>> GetBattlesByKilled(string roleName)
         {
-            return await _context.Battle.FindAsync(id);
+            return await _context.Battle
+                .AsNoTracking()
+                .Include(x => x.KilledRole)
+                .Include(x => x.KillerRole)
+                .Where(b => b.KillerRole.CharacterName.Equals(roleName))
+                .ToListAsync();
         }
 
-        public async Task<List<Battle>> GetBattles()
+        public async Task<IEnumerable<Battle>> GetBattlesByKiller(string roleName)
         {
-            return await _context.Battle.ToListAsync();
+            return await _context.Battle
+                .AsNoTracking()
+                .Include(x => x.KilledRole)
+                .Include(x => x.KillerRole)
+                .Where(b => b.KilledRole.CharacterName.Equals(roleName))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Battle>> GetBattlesOrderedByDeath()
+        {
+            return await _context.Battle
+                .AsNoTracking()
+                .Include(x => x.KilledRole)
+                .Include(x => x.KillerRole)
+                .OrderByDescending(x => x.KillerRole.Death)
+                .ThenBy(x => x.KillerRole.Level)
+                .ThenBy(x => x.KillerRole.LevelDate)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Battle>> GetBattlesOrderedByKill()
+        {
+            return await _context.Battle
+                .AsNoTracking()
+                .Include(x => x.KilledRole)
+                .Include(x => x.KillerRole)
+                .OrderByDescending(x => x.KillerRole.Kill)
+                .ThenBy(x => x.KillerRole.Level)
+                .ThenBy(x => x.KillerRole.LevelDate)
+                .ToListAsync();
+        }
+
+        public async Task<Battle> GetSingleBattle(int roleId)
+        {
+            return await _context.Battle
+                .AsNoTracking()
+                .Include(x => x.KilledRole)
+                .Include(x => x.KillerRole)
+                .FirstOrDefaultAsync(x => x.Id.Equals(roleId));
         }
     }
 }

@@ -14,19 +14,13 @@ namespace CoreRankingAPI
         {
             var connectionString = ConnectionBuilder.GetConnectionString();
 
-            var loggerFactory = new LoggerFactory();
-            loggerFactory.AddProvider(new DebugLoggerProvider());
-
             services.AddDbContext<CoreRankingContext>(options =>
             {
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-                options.UseLoggerFactory(loggerFactory);
             });
 
-            //services.AddScoped<RankingDbContext>();
             services.AddControllers();
-
-            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddCors();
             services.AddScoped<IBattleRepository, BattleRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddSwaggerGen(c =>
@@ -49,6 +43,13 @@ namespace CoreRankingAPI
 
             app.UseAuthorization();
 
+            app.UseCors(x => x.AllowAnyMethod()
+                              .AllowAnyHeader()
+                              .AllowAnyOrigin());
+            
+            app.UseMiddleware<HeaderHandlerMiddleware>();
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
+            app.UseMiddleware<ClientAccessMiddleware>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

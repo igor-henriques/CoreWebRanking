@@ -1,6 +1,6 @@
 {	
 	"HOST":"192.168.18.156",
-	"DB":"pw",
+	"DB":"CoreRanking",
 	"USER":"root",
 	"PORT":"3306",		
 	"PASSWORD":"95653549"	

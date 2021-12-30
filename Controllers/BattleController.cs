@@ -1,87 +1,66 @@
-﻿namespace CoreRankingAPI.Controllers
+﻿namespace CoreRankingAPI.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class BattleController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BattleController : ControllerBase
+    private readonly IBattleRepository _context;
+
+    public BattleController(IBattleRepository _context)
+    {        
+        this._context = _context;
+    }
+
+    // GET: api/Battle
+    [HttpGet("GetBattlesOrderedByKill")]
+    public async Task<IActionResult> GetBattlesOrderedByKill()
     {
-        private readonly CoreRankingContext _context;
+        var response = await _context.GetBattlesOrderedByKill();
 
-        public BattleController(CoreRankingContext context)
-        {
-            _context = context;
-        }
+        return Ok(response.ToList());
+    }
 
-        // GET: api/Battle
-        [HttpGet("GetBattlesOrderedByKill")]
-        public async Task<ActionResult<IEnumerable<Battle>>> GetBattlesOrderedByKill()
-        {
-            return await _context.Battle
-                .AsNoTracking()
-                .Include(x => x.KilledRole)
-                .Include(x => x.KillerRole)
-                .OrderByDescending(x => x.KillerRole.Kill)
-                .ThenBy(x => x.KillerRole.Level)
-                .ThenBy(x => x.KillerRole.LevelDate)
-                .ToListAsync();
-        }
+    [HttpGet("GetBattlesOrderedByDeath")]
+    public async Task<IActionResult> GetBattlesOrderedByDeath()
+    {
+        var response = await _context.GetBattlesOrderedByDeath();
 
-        [HttpGet("GetBattlesOrderedByDeath")]
-        public async Task<ActionResult<IEnumerable<Battle>>> GetBattlesOrderedByDeath()
-        {
-            return await _context.Battle
-                .AsNoTracking()
-                .Include(x => x.KilledRole)
-                .Include(x => x.KillerRole)
-                .OrderByDescending(x => x.KillerRole.Death)
-                .ThenBy(x => x.KillerRole.Level)
-                .ThenBy(x => x.KillerRole.LevelDate)
-                .ToListAsync();
-        }
+        return Ok(response.ToList());
+    }
 
-        [HttpPost("GetBattleById")]
-        public async Task<ActionResult<Battle>> GetBattleById([FromBody] int id)
-        {
-            if (id < 0) return NotFound();
+    [HttpPost("GetSingleBattle")]
+    public async Task<IActionResult> GetSingleBattle([FromBody] int roleId)
+    {
+        if (roleId < 0) return NotFound();
 
-            var battle = await _context.Battle.AsNoTracking().FirstOrDefaultAsync(x => x.Id.Equals(id));
+        var battle = await _context.GetSingleBattle(roleId);
 
-            if (battle is null) return NotFound();
+        if (battle is null) return NotFound("Não existe registros de batalha para o personagem especificado");
 
-            return battle;
-        }
+        return Ok(battle);
+    }
 
-        [HttpGet("GetBattlesByKiller")]
-        public async Task<ActionResult<IEnumerable<Battle>>> GetBattlesByKiller(string roleName)
-        {
-            if (string.IsNullOrEmpty(roleName)) return BadRequest("Informe o nome do personagem");
+    [HttpPost("GetBattlesByKiller")]
+    public async Task<IActionResult> GetBattlesByKiller([FromBody] string roleName)
+    {
+        if (string.IsNullOrEmpty(roleName)) return BadRequest("Nome do personagem inválido");
 
-            var battle = await _context.Battle
-                .AsNoTracking()
-                .Include(x => x.KilledRole)
-                .Include(x => x.KillerRole)
-                .Where(b => b.KilledRole.CharacterName.Equals(roleName))
-                .ToListAsync();
+        var battle = await _context.GetBattlesByKiller(roleName);
 
-            if (battle is null) return NotFound();
+        if (battle is null) return NotFound("Não existe registros de batalha para o personagem especificado");
 
-            return battle;
-        }
+        return Ok(battle.ToList());
+    }
 
-        [HttpGet("GetBattlesByKilled")]
-        public async Task<ActionResult<IEnumerable<Battle>>> GetBattlesByKilled(string roleName)
-        {
-            if (string.IsNullOrEmpty(roleName)) return BadRequest("Informe o nome do personagem");
+    [HttpPost("GetBattlesByKilled")]
+    public async Task<IActionResult> GetBattlesByKilled([FromBody] string roleName)
+    {
+        if (string.IsNullOrEmpty(roleName)) return BadRequest("Nome do personagem inválido");
 
-            var battle = await _context.Battle
-                .AsNoTracking()
-                .Include(x => x.KilledRole)
-                .Include(x => x.KillerRole)
-                .Where(b => b.KillerRole.CharacterName.Equals(roleName))
-                .ToListAsync();
+        var battle = await _context.GetBattlesByKilled(roleName);
 
-            if (battle is null) return NotFound();
+        if (battle is null) return NotFound("Não existe registros de batalha para o personagem especificado");
 
-            return battle;
-        }
+        return Ok(battle.ToList());
     }
 }

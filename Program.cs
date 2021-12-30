@@ -1,17 +1,21 @@
-namespace CoreRankingAPI
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+namespace CoreRankingAPI;
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        var listenerUrls = await URL.GetUrls();
+
+        ClientAccessControl.StartDailyTimer();
+
+        CreateHostBuilder(listenerUrls).Build().Run();
     }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder()
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseUrls(args);
+                webBuilder.UseStartup<Startup>();
+            });
 }

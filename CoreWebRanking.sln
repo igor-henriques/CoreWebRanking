@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30717.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreRankingAPI", "..\CoreRankingAPI\CoreRankingAPI.csproj", "{B605929C-83A7-4B68-923B-DD88F117677F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreRankingAPI", "CoreRankingAPI.csproj", "{B605929C-83A7-4B68-923B-DD88F117677F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreRankingInfra", "..\CoreRankingInfra\CoreRankingInfra.csproj", "{69FE61F0-0A33-4046-8E66-2C0C9686C50D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B605929C-83A7-4B68-923B-DD88F117677F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B605929C-83A7-4B68-923B-DD88F117677F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B605929C-83A7-4B68-923B-DD88F117677F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69FE61F0-0A33-4046-8E66-2C0C9686C50D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69FE61F0-0A33-4046-8E66-2C0C9686C50D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69FE61F0-0A33-4046-8E66-2C0C9686C50D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69FE61F0-0A33-4046-8E66-2C0C9686C50D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
