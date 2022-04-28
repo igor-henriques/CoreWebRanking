@@ -1,4 +1,6 @@
-﻿namespace CoreRankingAPI.Middlewares;
+﻿using Microsoft.Extensions.Primitives;
+
+namespace CoreRankingAPI.Middlewares;
 
 public class HeaderHandlerMiddleware
 {
@@ -13,7 +15,7 @@ public class HeaderHandlerMiddleware
     {
         foreach (var header in context.Request.Headers)
         {
-            if (header.Key.Equals("WebRankingHeader") & header.Value.Equals("ServerName"))
+            if (header.Equals(new KeyValuePair<string, StringValues>("ServerAuthentication", "ServerName")))
             {
                 await next(context);
                 return;

@@ -1,4 +1,6 @@
-﻿namespace CoreRankingAPI.Controllers;
+﻿using System.Threading;
+
+namespace CoreRankingAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -13,19 +15,19 @@ public class BattleController : ControllerBase
 
     // GET: api/Battle
     [HttpGet("GetBattlesOrderedByKill")]
-    public async Task<IActionResult> GetBattlesOrderedByKill()
+    public async Task<IActionResult> GetBattlesOrderedByKill([FromQuery] int page, [FromQuery] int recordsPerPage, CancellationToken cancellationToken)
     {
-        var response = await _context.GetBattlesOrderedByKill();
+        var response = await _context.GetBattlesOrderedByKill(page, recordsPerPage, cancellationToken);
 
-        return Ok(response.ToList());
+        return Ok(response);
     }
 
     [HttpGet("GetBattlesOrderedByDeath")]
-    public async Task<IActionResult> GetBattlesOrderedByDeath()
+    public async Task<IActionResult> GetBattlesOrderedByDeath([FromQuery] int page, [FromQuery] int recordsPerPage, CancellationToken cancellationToken)
     {
-        var response = await _context.GetBattlesOrderedByDeath();
+        var response = await _context.GetBattlesOrderedByDeath(page, recordsPerPage, cancellationToken);
 
-        return Ok(response.ToList());
+        return Ok(response);
     }
 
     [HttpPost("GetSingleBattle")]
@@ -49,7 +51,7 @@ public class BattleController : ControllerBase
 
         if (battle is null) return NotFound("Não existe registros de batalha para o personagem especificado");
 
-        return Ok(battle.ToList());
+        return Ok(battle);
     }
 
     [HttpPost("GetBattlesByKilled")]
@@ -61,6 +63,6 @@ public class BattleController : ControllerBase
 
         if (battle is null) return NotFound("Não existe registros de batalha para o personagem especificado");
 
-        return Ok(battle.ToList());
+        return Ok(battle);
     }
 }

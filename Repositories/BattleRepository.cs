@@ -1,4 +1,6 @@
-﻿namespace CoreRankingAPI.Repositories
+﻿using System.Threading;
+
+namespace CoreRankingAPI.Repositories
 {
     public class BattleRepository : IBattleRepository
     {
@@ -14,7 +16,7 @@
                 .AsNoTracking()
                 .Include(x => x.KilledRole)
                 .Include(x => x.KillerRole)
-                .Where(b => b.KillerRole.CharacterName.Equals(roleName))
+                .Where(b => b.KilledRole.CharacterName.Equals(roleName))
                 .ToListAsync();
         }
 
@@ -24,11 +26,11 @@
                 .AsNoTracking()
                 .Include(x => x.KilledRole)
                 .Include(x => x.KillerRole)
-                .Where(b => b.KilledRole.CharacterName.Equals(roleName))
+                .Where(b => b.KillerRole.CharacterName.Equals(roleName))
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Battle>> GetBattlesOrderedByDeath()
+        public async Task<IEnumerable<Battle>> GetBattlesOrderedByDeath(int page, int recordsPerPage, CancellationToken cancellationToken)
         {
             return await _context.Battle
                 .AsNoTracking()
@@ -37,10 +39,12 @@
                 .OrderByDescending(x => x.KillerRole.Death)
                 .ThenBy(x => x.KillerRole.Level)
                 .ThenBy(x => x.KillerRole.LevelDate)
-                .ToListAsync();
+                .Skip(page * recordsPerPage)
+                .Take(recordsPerPage)
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Battle>> GetBattlesOrderedByKill()
+        public async Task<IEnumerable<Battle>> GetBattlesOrderedByKill(int page, int recordsPerPage, CancellationToken cancellationToken)
         {
             return await _context.Battle
                 .AsNoTracking()
@@ -49,7 +53,9 @@
                 .OrderByDescending(x => x.KillerRole.Kill)
                 .ThenBy(x => x.KillerRole.Level)
                 .ThenBy(x => x.KillerRole.LevelDate)
-                .ToListAsync();
+                .Skip(page * recordsPerPage)
+                .Take(recordsPerPage)
+                .ToListAsync(cancellationToken);
         }
 
         public async Task<Battle> GetSingleBattle(int roleId)

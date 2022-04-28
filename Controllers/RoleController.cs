@@ -12,9 +12,9 @@
         }
 
         [HttpGet("GetAllRoles")]
-        public async Task<IActionResult> GetAllRoles()
+        public async Task<IActionResult> GetAllRoles([FromQuery] int page, [FromQuery] int recordsByPage)
         {
-            var response = await _context.GetAllRoles();
+            var response = await _context.GetAllRoles(page, recordsByPage);
 
             return Ok(response.ToList());
         }
@@ -69,7 +69,7 @@
             return Ok(response.ToList());
         }
 
-        [HttpPost("GetRolesByClass")]
+        [HttpGet("GetRolesByClass")]
         public async Task<IActionResult> GetRolesByClass([FromBody] string characterClass)
         {
             if (string.IsNullOrEmpty(characterClass)) return BadRequest("Classe inválida");

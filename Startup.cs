@@ -39,6 +39,11 @@ namespace CoreRankingAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoreRankingAPI v1"));
             }
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             app.UseRouting();
 
             app.UseAuthorization();
@@ -47,9 +52,9 @@ namespace CoreRankingAPI
                               .AllowAnyHeader()
                               .AllowAnyOrigin());
             
-            app.UseMiddleware<HeaderHandlerMiddleware>();
             app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.UseMiddleware<ClientAccessMiddleware>();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

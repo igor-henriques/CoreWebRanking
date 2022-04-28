@@ -2,7 +2,7 @@
 
 public interface IRoleRepository
 {
-    Task<IEnumerable<Role>> GetAllRoles();
+    Task<IEnumerable<Role>> GetAllRoles(int page, int recordsByPage);
     Task<IEnumerable<Role>> GetRolesByClass(string className);
     Task<Role> GetSingleRole(int roleId);
     Task<IEnumerable<Banned>> GetBanRecords(int roleId);

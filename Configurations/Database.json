@@ -1,7 +1,7 @@
-{	
-	"HOST":"192.168.18.156",
-	"DB":"CoreRanking",
-	"USER":"root",
-	"PORT":"3306",		
-	"PASSWORD":"95653549"	
+{
+	"HOST": "172.26.45.18",
+	"DB": "CoreRankingAPI",
+	"USER": "ironside",
+	"PORT": "3306",
+	"PASSWORD": "95653549Hh*"
 }

@@ -8,10 +8,12 @@ public class RoleRepository : IRoleRepository
         this._context = _context;
     }
 
-    public async Task<IEnumerable<Role>> GetAllRoles()
+    public async Task<IEnumerable<Role>> GetAllRoles(int page, int recordsPerPage)
     {
         return await _context.Role
             .AsNoTracking()
+            .Skip(page * recordsPerPage)
+            .Take(recordsPerPage)
             .ToListAsync();
     }
 
